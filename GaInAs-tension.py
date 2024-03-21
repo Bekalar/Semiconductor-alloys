@@ -97,7 +97,6 @@ av = interpolate(av_GaAs, av_InAs)
 c11 = interpolate(c11_GaAs, c11_InAs)
 c12 = interpolate(c12_GaAs, c12_InAs)
 
-print(b)
 eg = calculate(InAs_gamma, GaAs_gamma, C_bowing_gamma)
 
 vb = valence_band(vbo_GaAs, vbo_InAs)
