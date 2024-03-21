@@ -5,20 +5,30 @@ C_bowing_gamma = 0.477  # c bowing
 InAs_gamma = 0.417  # a
 GaAs_gamma = 1.519
 
-# Constans for tension
-ac = -7.17
-av = -1.16
-ao = 5.65325  # Podłoże
-a = 6.0583  # Warstwa
-b = -2.0
-c11 = 1221
-c12 = 566
+x = [i / 100.0 for i in range(0, 100)]
+a = [6.0583 - 0.405 * (1 - i) for i in x]
+ao = 5.65325
 
-# valence band
+# parameters
+ac_GaAs = -7.17
+av_GaAs = -1.16
+ac_InAs = -5.08
+av_InAs = -1.00
+b_GaAs = -2.0
+b_InAs = -1.8
 vbo_GaAs = -0.80
 vbo_InAs = -0.59
+c11_GaAs = 1221
+c12_GaAs = 566
+c11_InAs = 832.9
+c12_InAs = 452.6
 
-x = [i / 100.0 for i in range(0, 100)]
+
+def interpolate(val1, val2):
+    temp = []
+    for i in x:
+        temp.append(val1 * (1 - i) + val2 * i)
+    return temp
 
 
 def calculate(InAs, GaAs, C_bowing):
@@ -47,40 +57,47 @@ def conduction_band(valence, energy_band):
 
 
 def calculate_tension_e(a_c, a_a, a_o, energy_band, c_12, c_11):
-    epsilon_x = (a_o - a_a) / a_a
-    epsilon_z = -2 * (c_12 / c_11) * epsilon_x
+    epsilon_x = [(a_o - a_a[i]) / a_a[i] for i in range(len(x))]
+    epsilon_z = [-2 * (c_12[i] / c_11[i]) * epsilon_x[i] for i in range(len(x))]
 
-    d_Ehc = a_c * (2 * epsilon_x + epsilon_z)
+    d_Ehc = [a_c[i] * (2 * epsilon_x[i] + epsilon_z[i]) for i in range(len(x))]
 
-    Ec = [(Eo + d_Ehc) for Eo in energy_band]
+    Ec = [(energy_band[i] + d_Ehc[i]) for i in range(len(x))]
 
     return Ec
 
 
 def calculate_tension_ehh(a_v, a_a, a_o, energy_band, c_12, c_11):
-    epsilon_x = (a_o - a_a) / a_a
-    epsilon_z = -2 * (c_12 / c_11) * epsilon_x
+    epsilon_x = [(a_o - a_a[i]) / a_a[i] for i in range(len(x))]
+    epsilon_z = [-2 * (c_12[i] / c_11[i]) * epsilon_x[i] for i in range(len(x))]
 
-    d_Es = - b * (epsilon_z - epsilon_x)
-    d_Ehv = a_v * (2 * epsilon_x + epsilon_z)
+    d_Es = [-1 * b[i] * (epsilon_z[i] - epsilon_x[i]) for i in range(len(x))]
+    d_Ehv = [a_v[i] * (2 * epsilon_x[i] + epsilon_z[i]) for i in range(len(x))]
 
-    Ehh = [(Eo + d_Ehv + d_Es) for Eo in energy_band]
+    Ehh = [(energy_band[i] + d_Ehv[i] + d_Es[i]) for i in range(len(x))]
 
     return Ehh
 
 
 def calculate_tension_elh(a_v, a_a, a_o, energy_band, c_12, c_11):
-    epsilon_x = (a_o - a_a) / a_a
-    epsilon_z = -2 * (c_12 / c_11) * epsilon_x
+    epsilon_x = [(a_o - a_a[i]) / a_a[i] for i in range(len(x))]
+    epsilon_z = [-2 * (c_12[i] / c_11[i]) * epsilon_x[i] for i in range(len(x))]
 
-    d_Es = - b * (epsilon_z - epsilon_x)
-    d_Ehv = a_v * (2 * epsilon_x + epsilon_z)
+    d_Es = [-1 * b[i] * (epsilon_z[i] - epsilon_x[i]) for i in range(len(x))]
+    d_Ehv = [a_v[i] * (2 * epsilon_x[i] + epsilon_z[i]) for i in range(len(x))]
 
-    Elh = [(Eo + d_Ehv - d_Es) for Eo in energy_band]
+    Elh = [(energy_band[i] + d_Ehv[i] - d_Es[i]) for i in range(len(x))]
 
     return Elh
 
 
+b = interpolate(b_GaAs, b_InAs)
+ac = interpolate(ac_GaAs, ac_InAs)
+av = interpolate(av_GaAs, av_InAs)
+c11 = interpolate(c11_GaAs, c11_InAs)
+c12 = interpolate(c12_GaAs, c12_InAs)
+
+print(b)
 eg = calculate(InAs_gamma, GaAs_gamma, C_bowing_gamma)
 
 vb = valence_band(vbo_GaAs, vbo_InAs)
