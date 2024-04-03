@@ -6,7 +6,7 @@ InAs_gamma = 0.417  # a
 GaAs_gamma = 1.519
 
 x = [i / 100.0 for i in range(0, 100)]
-a = [6.0583 - 0.405 * (1 - i) for i in x]  # InAs lattice constant
+a_layer = 6.0583  # InAs lattice constant
 ao = 5.65325  # GaAs lattice constant
 
 # parameters
@@ -91,6 +91,7 @@ def calculate_tension_elh(a_v, a_a, a_o, energy_band, c_12, c_11):
     return Elh
 
 
+a = interpolate(a_layer, ao)
 b = interpolate(b_GaAs, b_InAs)
 ac = interpolate(ac_GaAs, ac_InAs)
 av = interpolate(av_GaAs, av_InAs)
