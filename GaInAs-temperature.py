@@ -128,7 +128,7 @@ cb = conduction_band(vb, eg_w)
 
 # temperatures
 eg_1 = calculate_temperature(eg_w, alfa, beta, 0)
-eg_2 = calculate_temperature(eg_w, alfa, beta, 10)
+eg_2 = calculate_temperature(eg_w, alfa, beta, 100)
 eg_3 = calculate_temperature(eg_w, alfa, beta, 300)
 
 cb_1 = conduction_band(vb, eg_1)
