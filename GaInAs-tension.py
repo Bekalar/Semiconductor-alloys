@@ -91,7 +91,7 @@ def calculate_tension_elh(a_v, a_a, a_o, energy_band, c_12, c_11):
     return Elh
 
 
-a = interpolate(a_layer, ao)
+a = interpolate(ao, a_layer)
 b = interpolate(b_GaAs, b_InAs)
 ac = interpolate(ac_GaAs, ac_InAs)
 av = interpolate(av_GaAs, av_InAs)
