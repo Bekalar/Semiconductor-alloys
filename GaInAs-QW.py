@@ -7,6 +7,8 @@ GaAs_gamma = 1.519
 
 # x = [i / 100.0 for i in range(0, 100)]
 x = [0.43]
+p = x[0]
+q = 1 - x[0]
 a_layer = 6.0583  # InAs lattice constant
 ao = 5.65325  # GaAs lattice constant
 
@@ -144,10 +146,10 @@ vb_medium = cb[0]
 cb_medium = vb_Ehh[0]
 
 # width
-width = 100 # 100nm
+width = 100  # 100nm
 xl_sub = 0
 xr_sub = width
-xl_med = (100/2) - 10
+xl_med = (100 / 2) - 10
 xr_med = xl_med + 20
 
 # plot
@@ -175,6 +177,6 @@ axes.legend(fontsize=14, loc='center right')
 
 plt.xlabel("Width of quantum well [nm]")
 plt.ylabel("Energy gap [eV]")
-plt.title(r'$ In_{0.43}Ga_{0.57}As$ / 300K', fontsize=20)
+plt.title(r'$ In_{' + str(round(p, 2)) + '}Ga_{' + str(round(q, 2)) + '}As$ / ' + str(T) + 'K', fontsize=20)
 plt.grid()
 plt.show()
