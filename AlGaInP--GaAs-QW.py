@@ -1,74 +1,93 @@
 import matplotlib.pyplot as plt
+import math as mt
 
-# substrate
-# medium
-# substrate
+# GaInP and AlInP
+# AlGaInP / GaAs
+
+# temperature
+T = 300
 
 # gamma
-C_bowing_gamma = [(-0.127 + 1.310 * i / 100.0) for i in range(0, 100)]  # c linear bowing parameter
-GaAs_gamma = 1.519
-AlAs_gamma = 3.099  # a
+GaP_gamma = 2.886 + 0.1081 * (1 - (mt.cosh(164 / T) / mt.sinh(164 / T)))  # a
+AlP_gamma = 3.63  # a
+InP_gamma = 1.4236
 
 # x = [i / 100.0 for i in range(0, 100)]
-x = [0.2]
-p = x[0]
-q = 1 - x[0]
-a_layer = 5.66139  # AlAs lattice constant
+y = [0.51]
+x = [0.47]
+p_x = x[0]
+q_x = 1 - x[0]
+p_y = y[0]
+q_y = 1 - y[0]
 ao = 5.65325  # GaAs lattice constant
 
+# lattice constants
+a_GaP = 5.4508
+a_AlP = 5.4635
+a_InP = 5.8690
+
 # parameters
-ac_GaAs = -7.17
-av_GaAs = -1.16
-ac_AlAs = -5.64
-av_AlAs = -2.47
-b_GaAs = -2.0
-b_AlAs = -2.3
+ac_GaP = -8.2
+av_GaP = -1.7
+ac_AlP = -5.7
+av_AlP = -3.0
+ac_InP = -6.0
+av_InP = -0.6
+b_GaP = -1.6
+b_AlP = -1.5
+b_InP = -2.0
+vbo_GaP = -1.27
+vbo_AlP = -1.74
+vbo_InP = -0.94
+c11_GaP = 1405
+c12_GaP = 620.3
+c11_AlP = 1330
+c12_AlP = 630
+c11_InP = 1011
+c12_InP = 561
+
+# GaAs parameters
 vbo_GaAs = -0.80
-vbo_AlAs = -1.33
-c11_GaAs = 1221
-c12_GaAs = 566
-c11_AlAs = 1250
-c12_AlAs = 534
+GaAs_gamma = 1.519
 
 # temperature parameters GaAs
 alfa_GaAs = 0.0005405
 beta_GaAs = 204
 
-# temperature parameters InAs
-alfa_AlAs = 0.000885
-beta_AlAs = 530
+# temperature parameters GaP
+alfa_GaP = 0.0005771
+beta_GaP = 372
 
-# temperature
-T = 300
+# temperature parameters AlP
+alfa_AlP = 0.0005771
+beta_AlP = 372
+
+# temperature parameters InP
+alfa_InP = 0.000363
+beta_InP = 162
 
 
-def interpolate(val1, val2):
+def interpolate(val1, val2, comp):
     temp = []
-    for i in x:
+    for i in comp:
         temp.append(val1 * (1 - i) + val2 * i)
     return temp
 
 
-def calculate(AlAs, GaAs, C_bowing, x):
-    a = []
-    b = []
-    c = []
-
-    for i in range(len(x)):
-        a.append(AlAs)
-        b.append(GaAs - AlAs - C_bowing[i])
-        c.append(C_bowing[i])
-
+def calculate(GaP, AlP, InP):
     eg = []
-    for i in range(len(x)):
-        eg.append(a[i] + x[0] * b[i] + x[0] * x[0] * c[i])
+    eg_GaInP = y[0] * GaP + (1 - y[0]) * InP
+
+    for i in x:
+        eg.append(i * AlP + (1 - i) * eg_GaInP)
+
     return eg
 
 
 def calculate_temperature(eg, alf, bet, Tem):
     temp = []
     for i in range(len(x)):
-        temp.append(eg[i] - (alf[i] * Tem * Tem) / (Tem + bet[i]))
+        temp.append(eg[i] - alf[i] * Tem * Tem / (Tem + bet[i]))
     return temp
 
 
@@ -127,23 +146,33 @@ def calculate_tension_elh(a_v, a_a, a_o, energy_band, c_12, c_11):
 
 
 # temperature interpolation
-alfa = interpolate(alfa_GaAs, alfa_AlAs)
-beta = interpolate(beta_GaAs, beta_AlAs)
+alfa_GaInP = interpolate(alfa_InP, alfa_GaP, y)
+beta_GaInP = interpolate(beta_InP, beta_GaP, y)
+alfa = interpolate(alfa_GaInP[0], alfa_AlP, x)
+beta = interpolate(beta_GaInP[0], beta_AlP, x)
 
 # tension interpolation
-a = interpolate(ao, a_layer)
-b = interpolate(b_GaAs, b_AlAs)
-ac = interpolate(ac_GaAs, ac_AlAs)
-av = interpolate(av_GaAs, av_AlAs)
-c11 = interpolate(c11_GaAs, c11_AlAs)
-c12 = interpolate(c12_GaAs, c12_AlAs)
+a_GaInP = interpolate(a_InP, a_GaP, y)
+a_layer = interpolate(a_GaInP[0], a_AlP, x)
+a = interpolate(ao, a_layer[0], x)
+b_GaInP = interpolate(b_InP, b_GaP, y)
+b = interpolate(b_GaInP[0], b_AlP, x)
+ac_GaInP = interpolate(ac_InP, ac_GaP, y)
+ac = interpolate(ac_GaInP[0], ac_AlP, x)
+av_GaInP = interpolate(av_InP, av_GaP, y)
+av = interpolate(av_GaInP[0], av_AlP, x)
+c11_GaInP = interpolate(c11_InP, c11_GaP, y)
+c11 = interpolate(c11_GaInP[0], c11_AlP, x)
+c12_GaInP = interpolate(c12_InP, c12_GaP, y)
+c12 = interpolate(c12_GaInP[0], c12_AlP, x)
 
-eg = calculate(AlAs_gamma, GaAs_gamma, C_bowing_gamma, x)
-vb = valence_band(vbo_GaAs, vbo_AlAs)
-cb = conduction_band(vb, eg)
+eng = calculate(GaP_gamma, AlP_gamma, InP_gamma)
+vb_GaInP = valence_band(vbo_InP, vbo_GaP)
+vb = valence_band(vb_GaInP[0], vbo_AlP)
+cb = conduction_band(vb, eng)
 
 # temperatures tension substrate
-eg_T = calculate_temperature(eg, alfa, beta, T)
+eg_T = calculate_temperature(eng, alfa, beta, T)
 cb_T = conduction_band(vb, eg_T)
 cb_E = calculate_tension_e(ac, a, ao, cb_T, c12, c11)
 
@@ -162,9 +191,10 @@ else:
 
 # temperature tension medium
 eg_T_GaAs = calculate_temperature_substrate(GaAs_gamma, alfa_GaAs, beta_GaAs, T)
-part = eg_T_GaAs / 2  # moving valence band
+part = eg_T_GaAs / 4  # moving valence band
 vb_medium = vbo_GaAs + part
 cb_medium = vb_medium + eg_T_GaAs
+
 
 # width
 width = 100  # 100nm
@@ -203,6 +233,8 @@ axes.legend(fontsize=14, loc='center right')
 
 plt.xlabel("Width of quantum well [nm]")
 plt.ylabel("Energy gap [eV]")
-plt.title(r'$ Al_{' + str(round(p, 2)) + '}Ga_{' + str(round(q, 2)) + '}As$ / GaAs ' + str(T) + 'K', fontsize=20)
+plt.title(r'$ Al_{' + str(round(p_x, 2)) + '}(Ga_{' + str(round(p_y, 2)) + '}In_{' + str(round(q_y, 2)) + '})_{' + str(
+    round(q_x, 2)) + '}P$ / GaAs ' + str(T) + 'K', fontsize=20)
 plt.grid()
+plt.show()
 plt.show()
