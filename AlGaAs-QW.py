@@ -162,8 +162,7 @@ else:
 
 # temperature tension medium
 eg_T_GaAs = calculate_temperature_substrate(GaAs_gamma, alfa_GaAs, beta_GaAs, T)
-part = eg_T_GaAs / 4  # moving valence band
-vb_medium = vbo_GaAs + part
+vb_medium = vbo_GaAs
 cb_medium = vb_medium + eg_T_GaAs
 
 # width

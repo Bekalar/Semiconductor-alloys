@@ -12,7 +12,6 @@ GaP_gamma = 2.886 + 0.1081 * (1 - (mt.cosh(164 / T) / mt.sinh(164 / T)))  # a
 AlP_gamma = 3.63  # a
 InP_gamma = 1.4236
 
-# x = [i / 100.0 for i in range(0, 100)]
 y = [0.51]
 x = [0.47]
 p_x = x[0]
@@ -191,8 +190,7 @@ else:
 
 # temperature tension medium
 eg_T_GaAs = calculate_temperature_substrate(GaAs_gamma, alfa_GaAs, beta_GaAs, T)
-part = eg_T_GaAs / 4  # moving valence band
-vb_medium = vbo_GaAs + part
+vb_medium = vbo_GaAs
 cb_medium = vb_medium + eg_T_GaAs
 
 # width
