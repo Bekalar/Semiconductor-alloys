@@ -10,7 +10,7 @@ GaAs_gamma = 1.519
 AlAs_gamma = 3.099  # a
 
 # x = [i / 100.0 for i in range(0, 100)]
-x = [0.2]
+x = [0.47]
 p = x[0]
 q = 1 - x[0]
 a_layer = 5.66139  # AlAs lattice constant
@@ -150,7 +150,7 @@ cb_E = calculate_tension_e(ac, a, ao, cb_T, c12, c11)
 vb_Ehh = calculate_tension_ehh(av, a, ao, vb, c12, c11)
 vb_Elh = calculate_tension_elh(av, a, ao, vb, c12, c11)
 
-if cb >= cb_E:
+if cb <= cb_E:
     cb_substrate = cb
 else:
     cb_substrate = cb_E
@@ -162,7 +162,7 @@ else:
 
 # temperature tension medium
 eg_T_GaAs = calculate_temperature_substrate(GaAs_gamma, alfa_GaAs, beta_GaAs, T)
-part = eg_T_GaAs / 2  # moving valence band
+part = eg_T_GaAs / 4  # moving valence band
 vb_medium = vbo_GaAs + part
 cb_medium = vb_medium + eg_T_GaAs
 
@@ -189,17 +189,22 @@ axes.hlines(y=vb_Ehh, xmin=xr_med, xmax=xr_sub, color="red")
 axes.hlines(y=vb_Elh, xmin=xr_med, xmax=xr_sub, color="blue")
 axes.hlines(y=cb_E, xmin=xl_sub, xmax=xl_med, label=r"$ E_{c}$", color="violet")
 axes.hlines(y=cb_E, xmin=xr_med, xmax=xr_sub, color="violet")
+
 # without tension substrate
-axes.hlines(y=vb, xmin=xl_sub, xmax=xl_med, label=r"$ E_{v}$ without tension", color="black")
-axes.hlines(y=vb, xmin=xr_med, xmax=xr_sub, color="black")
-axes.hlines(y=cb, xmin=xl_sub, xmax=xl_med, label=r"$ E_{c}$ without tension", color="black")
-axes.hlines(y=cb, xmin=xr_med, xmax=xr_sub, color="black")
+axes.hlines(y=vb, xmin=xl_sub, xmax=xl_med, label=r"$ E_{v}$ no tension", color="grey")
+axes.hlines(y=vb, xmin=xr_med, xmax=xr_sub, color="grey")
+axes.hlines(y=cb, xmin=xl_sub, xmax=xl_med, label=r"$ E_{c}$ no tension", color="grey")
+axes.hlines(y=cb, xmin=xr_med, xmax=xr_sub, color="grey")
 
 # horizontal lines substrate
-axes.hlines(y=cb_medium, xmin=xl_med, xmax=xr_med, label=r"$ E_{c}$ without tension", color="black")
-axes.hlines(y=vb_medium, xmin=xl_med, xmax=xr_med, label=r"$ E_{v}$ without tension", color="black")
+axes.hlines(y=cb_medium, xmin=xl_med, xmax=xr_med, color="black")
+axes.hlines(y=vb_medium, xmin=xl_med, xmax=xr_med, color="black")
 
 axes.legend(fontsize=14, loc='center right')
+medium_text = 'GaAs ' + str(round((cb_medium - vb_medium), 2)) + ' eV'
+substrate_text = 'AlGaAs ' + str(round((cb_substrate[0] - vb_substrate[0]), 2)) + ' eV'
+axes.text(xl_med, 0.2, medium_text, fontsize=12)
+axes.text(xl_sub, 0.2, substrate_text, fontsize=12)
 
 plt.xlabel("Width of quantum well [nm]")
 plt.ylabel("Energy gap [eV]")
