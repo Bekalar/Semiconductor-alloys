@@ -52,6 +52,6 @@ axes.legend(fontsize=14)
 
 plt.xlabel("Composition x")
 plt.ylabel("Effective mass")
-plt.title(r'$ Al_{x}Ga_{1-x}As$ Particles mass', fontsize=20)
+plt.title(r'$ Al_{x}Ga_{1-x}As$ Particle effective mass ', fontsize=20)
 plt.grid()
 plt.show()
