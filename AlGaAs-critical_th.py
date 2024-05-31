@@ -13,7 +13,7 @@ def interpolate(val1, val2, x):
 
 
 def hc_function(hc_val, b_val, v_val):
-    return hc_val - ((b_val / (2 * mt.pi * f)) * ((1 - 0.25 * v_val) / (1 + v_val)) * (np.log(hc_val / b_val) + 1))
+    return ((b_val / (2 * mt.pi * f)) * ((1 - 0.25 * v_val) / (1 + v_val)) * (np.log(hc_val / b_val) + 1)) - hc_val
 
 
 def bisection(xl, xr, eps, fun, b_val, v_val):
@@ -41,11 +41,11 @@ x = np.linspace(0, 1, 100)
 # x = [i / 100.0 for i in range(0, 100)]
 
 # [a,b]
-p = 1  # a left value [nm]
-q = 400  # b right value [nm]
+p = 0.001  # a left value [nm]
+q = 10  # b right value [nm]
 
 # Numerical tolerance parameter
-epsilon = 0.00001
+epsilon = 0.000001
 
 # Interpolate parameters
 a = interpolate(a_GaAs, a_AlAs, x)
@@ -57,7 +57,7 @@ v = [c12[i] / (c11[i] + c12[i]) for i in range(len(x))]
 f = mt.fabs((a_GaAs - a_AlAs) / a_AlAs)
 
 # Plot figure
-fig, (ax1, ax2) = plt.subplots(2)
+fig, (ax1, ax2) = plt.subplots(2, figsize=(12, 6))
 fig.suptitle(r'$ Al_{x}Ga_{1-x}As$', fontsize=20)
 
 # Calculate critical thickness for each composition
@@ -77,11 +77,11 @@ for i, x_val in enumerate(x):
     zeros = bisection(p, q, epsilon, hc_function, b[i], v[i])
     print(zeros)
     if zeros is not None:
-        critical_thickness[i] = zeros
+        critical_thickness[i] = round(zeros, 6)
 
 # Plot hc(x)
-ax2.plot(x, critical_thickness, label='hc(x)')
-ax2.set_xlabel('Composition')
+ax2.plot(x, critical_thickness)
+ax2.set_xlabel('Composition x')
 ax2.set_ylabel('Critical Thickness [nm]')
 ax2.set_title('Critical Thickness in Composition')
 ax2.grid(True)
