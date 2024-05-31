@@ -42,7 +42,7 @@ x = np.linspace(0, 1, 100)
 
 # [a,b]
 p = 1  # a left value [nm]
-q = 500  # b right value [nm]
+q = 400  # b right value [nm]
 
 # numerical tolerance parameter
 epsilon = 0.00001
@@ -74,10 +74,10 @@ for i, x_val in enumerate(x):
     ax1.set_title('Critical Thickness function of hc [nm]')
     ax1.grid(True)
 
-    root = bisection(p, q, epsilon, hc_function, b[i], v[i])
-    print(root)
-    if root is not None:
-        critical_thickness[i] = root
+    zeros = bisection(p, q, epsilon, hc_function, b[i], v[i])
+    print(zeros)
+    if zeros is not None:
+        critical_thickness[i] = zeros
 
 # Plot hc(x)
 ax2.plot(x, critical_thickness, label='hc(x)')
