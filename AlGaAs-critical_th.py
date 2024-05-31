@@ -28,7 +28,7 @@ def bisection(xl, xr, eps, fun, b_val, v_val):
     return (xr + xl) / 2.0
 
 
-# parameters
+# Parameters
 a_AlAs = 0.566139  # AlAs lattice constant [nm]
 a_GaAs = 0.565325  # GaAs lattice substrate [nm]
 c11_GaAs = 1221
@@ -36,7 +36,7 @@ c12_GaAs = 566
 c11_AlAs = 1250
 c12_AlAs = 534
 
-# composition
+# Composition
 x = np.linspace(0, 1, 100)
 # x = [i / 100.0 for i in range(0, 100)]
 
@@ -44,10 +44,10 @@ x = np.linspace(0, 1, 100)
 p = 1  # a left value [nm]
 q = 400  # b right value [nm]
 
-# numerical tolerance parameter
+# Numerical tolerance parameter
 epsilon = 0.00001
 
-# interpolate parameters
+# Interpolate parameters
 a = interpolate(a_GaAs, a_AlAs, x)
 c11 = interpolate(c11_GaAs, c11_AlAs, x)
 c12 = interpolate(c12_GaAs, c12_AlAs, x)
@@ -64,7 +64,7 @@ fig.suptitle(r'$ Al_{x}Ga_{1-x}As$', fontsize=20)
 critical_thickness = np.zeros_like(x)
 
 for i, x_val in enumerate(x):
-    hc_values = np.linspace(p, q, 100)  # Adjust range for more accuracy if needed
+    hc_values = np.linspace(p, q, 100)
     hc_function_values = hc_function(hc_values, b[i], v[i])
 
     # Plot hc_fun(hc)
