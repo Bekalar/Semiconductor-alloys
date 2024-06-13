@@ -4,7 +4,8 @@ import math as mt
 y = [0.53]
 x = [i / 100.0 for i in range(0, 100)]
 T = 300  # temperature in kelvin
-
+p = y[0]
+q = 1 - y[0]
 # GaInP and AlInP
 
 # gamma
@@ -49,6 +50,7 @@ axes.legend(fontsize=14)
 
 plt.xlabel("Composition x")
 plt.ylabel("Energy gap [eV]")
-plt.title(r'$ Al_{x}(Ga_{y}In_{1-y})_{1-x}P$', fontsize=20)
+plt.title(r'$ Al_{x}(Ga_{' + str(round(p, 2)) + '}In_{' + str(round(q, 2)) + '})_{1-x}P$', fontsize=20)
+# plt.title(r'$ Al_{x}(Ga_{y}In_{1-y})_{1-x}P$', fontsize=20)
 plt.grid()
 plt.show()

@@ -86,6 +86,7 @@ for i, x_val in enumerate(x):
 
 # Plot hc(x)
 ax2.plot(x, critical_thickness)
+ax2.set_ylim([0, 2000])
 ax2.set_xlabel('Composition x')
 ax2.set_ylabel('Critical Thickness [nm]')
 ax2.set_title('Critical Thickness in Composition')
